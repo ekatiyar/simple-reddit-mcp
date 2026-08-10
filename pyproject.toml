@@ -1,0 +1,46 @@
+[project]
+name = "simple-reddit-mcp"
+version = "0.1.0"
+description = "Read-only Reddit MCP server backed by the Arctic Shift archive - no Reddit account, no API key, no browser"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Eashaan K", email = "eashaank@gmail.com" }]
+keywords = ["mcp", "reddit", "arctic-shift", "model-context-protocol", "llm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = ["zeromcp>=1.6"]
+
+[project.urls]
+Homepage = "https://github.com/ekatiyar/simple-reddit-mcp"
+Repository = "https://github.com/ekatiyar/simple-reddit-mcp"
+Issues = "https://github.com/ekatiyar/simple-reddit-mcp/issues"
+
+[project.scripts]
+simple-reddit-mcp = "simple_reddit_mcp.server:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["uv_build>=0.9,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "simple_reddit_mcp"
+module-root = "src"
