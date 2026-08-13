@@ -6,7 +6,7 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
-authors = [{ name = "Eashaan K", email = "eashaank@gmail.com" }]
+authors = [{ name = "ekatiyar" }]
 keywords = ["mcp", "reddit", "arctic-shift", "model-context-protocol", "llm"]
 classifiers = [
     "Development Status :: 4 - Beta",
