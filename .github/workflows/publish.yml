@@ -1,0 +1,53 @@
+name: Publish
+
+on:
+  push:
+    branches: [master]
+    paths: ["pyproject.toml"]
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      publish: ${{ steps.version.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - id: version
+        run: |
+          version="$(uv version --short --frozen)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          status="$(curl -sS -o /dev/null -w '%{http_code}' \
+            "https://pypi.org/pypi/simple-reddit-mcp/$version/json")"
+          case "$status" in
+            404) echo "publish=true" >> "$GITHUB_OUTPUT" ;;
+            200) echo "publish=false" >> "$GITHUB_OUTPUT"
+                 echo "$version is already on PyPI, nothing to do" ;;
+            # Anything else means we could not tell, so refuse to guess.
+            *)   echo "unexpected status $status from PyPI" >&2; exit 1 ;;
+          esac
+
+  test:
+    needs: check
+    if: needs.check.outputs.publish == 'true'
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: [check, test]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write # PyPI trusted publishing
+      contents: write # pushing the release tag
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - run: uv build
+      - run: uv publish --trusted-publishing always
+      - name: Tag the release
+        run: |
+          git tag "v${{ needs.check.outputs.version }}"
+          git push origin "v${{ needs.check.outputs.version }}"
