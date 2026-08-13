@@ -12,8 +12,10 @@ import time
 from typing import Any
 from urllib import error, parse, request
 
+from . import __version__
+
 BASE_URL = "https://arctic-shift.photon-reddit.com"
-USER_AGENT = "simple-reddit-mcp/0.1.0 (+https://github.com/ekatiyar/simple-reddit-mcp)"
+USER_AGENT = f"simple-reddit-mcp/{__version__} (+https://github.com/ekatiyar/simple-reddit-mcp)"
 TIMEOUT_SECONDS = 60
 
 # ~0.4s between requests keeps normal use under Arctic Shift's burst rate limit.

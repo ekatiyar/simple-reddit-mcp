@@ -1,11 +1,14 @@
 # simple-reddit-mcp
 
+[![PyPI](https://img.shields.io/pypi/v/simple-reddit-mcp)](https://pypi.org/project/simple-reddit-mcp/)
+[![CI](https://github.com/ekatiyar/simple-reddit-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/ekatiyar/simple-reddit-mcp/actions/workflows/ci.yml)
+
 A read-only Reddit MCP server that needs **no Reddit account, no API key, and no
 browser**. It reads threads, comments and subreddits from the
 [Arctic Shift](https://arctic-shift.photon-reddit.com) archive over plain
 keyless HTTP.
 
-One runtime dependency [`zeromcp`](https://github.com/mrexodia/zeromcp), making `simple-reddit-mcp` lightweight and quick to startup
+One runtime dependency, [`zeromcp`](https://github.com/mrexodia/zeromcp), keeps `simple-reddit-mcp` lightweight and quick to start.
 
 ## Requirements
 
@@ -15,31 +18,38 @@ One runtime dependency [`zeromcp`](https://github.com/mrexodia/zeromcp), making 
 ## Run it
 
 ```bash
-# from a clone of this repo
-uv run simple-reddit-mcp
-
-# from a local checkout, without installing anything
-uvx --from /path/to/simple-reddit-mcp simple-reddit-mcp
-
-# with pip
-pip install -e . && simple-reddit-mcp
+uvx simple-reddit-mcp
 ```
 
 The server speaks MCP over stdio: JSON-RPC on stdout, logs on stderr.
 
 ## Configure your MCP client
 
-Example for Claude:
+Claude:
+
+```bash
+claude mcp add reddit --scope user -- uvx simple-reddit-mcp
+```
+
+or
 
 ```json
 {
   "mcpServers": {
     "reddit": {
       "command": "uvx",
-      "args": ["--from", "/absolute/path/to/simple-reddit-mcp", "simple-reddit-mcp"]
+      "args": ["simple-reddit-mcp"]
     }
   }
 }
+```
+
+Codex — in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.reddit]
+command = "uvx"
+args = ["simple-reddit-mcp"]
 ```
 
 ## Tools
@@ -82,6 +92,14 @@ Not currently implemented:
 ```bash
 uv sync --group dev
 uv run --group dev pytest
+```
+
+To publish a new release to PyPI, bump `version` and push to master:
+
+```bash
+uv version --bump patch   # bumps pyproject.toml and relocks
+git commit -am "release $(uv version --short)"
+git push
 ```
 
 ## Attribution
